@@ -73,3 +73,17 @@ if __name__ == "__main__":
     s = Scraper()
     s.scrap()
 
+
+
+    def SepInfo(self, tds):
+         
+        weatherinfo = []
+
+        for td in tds:                
+            if td.find('a'):             
+                point = td.find('a').text
+                temperature = tds[5].text
+                humidity = tds[9].text      
+                weatherinfo.append([point, temperature, humidity])
+
+        return weatherinfo
