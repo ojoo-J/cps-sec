@@ -1,8 +1,14 @@
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
+
+
 import requests
 from bs4 import BeautifulSoup
 import csv
 
-class Scraper() : #OK
+class Scraper() :
     
     def __init__(self) : 
         self.url = "http://kr.indeed.com/jobs?q=python&limit=50"
@@ -22,7 +28,7 @@ class Scraper() : #OK
 
         return len(pages)
     
-    def getCards(self, soup, cnt) : #OK
+    def getCards(self, soup, cnt) :
         jobCards = soup.find_all("div", class_ = "jobsearch-SerpJobCard")
 
         jobID = []
@@ -39,21 +45,21 @@ class Scraper() : #OK
         
         self.writeCSV(jobID, jobTitle, jobLocation, cnt)
 
-    def writeCSV(self, ID, Title, Location, cnt) : #OK
-        file = open('indeed.csv','a', newline='') #a는 append, w는 새로 쓰여짐
+    def writeCSV(self, ID, Title, Location, cnt) :
+        file = open('indeed.csv','a', newline='') #a -> append, w -> new(reset)
 
         wr = csv.writer(file)
-        for i in range(len(ID)) : # 길이는 어차피 다 같으니까 셋 중 아무거나 하나
-            wr.writerow([str(i + 1 + (cnt*50)), ID[i], Title[i], Location[i]]) # 맨 앞에는 번호가 들어가게 
+        for i in range(len(ID)) :
+            wr.writerow([str(i + 1 + (cnt*50)), ID[i], Title[i], Location[i]]) # str(i + 1 + (cnt*50))->index
         
         file.close()
 
-    def scrap(self) : # 위에서 만든 함수들 사용
+    def scrap(self) : #function combine
 
         soupPage = self.getHTML(0)
         pages = self.getPages(soupPage)
 
-        file = open('indeed.csv','w', newline='') #프로그램 실행시마다 새로 시작하도록 'w'옵션 넣기
+        file = open('indeed.csv','w', newline='')
         wr = csv.writer(file)
         wr.writerow(["No.", "Link","Title", "Location"])
         file.close()
@@ -61,8 +67,9 @@ class Scraper() : #OK
         for i in range(pages) : 
             soupCard = self.getHTML(i)
             self.getCards(soupCard, i)
-            print(i+1, "번째 페이지 Done")
+            print(i+1, "page Done")
 
 if __name__ == "__main__":
     s = Scraper()
     s.scrap()
+
