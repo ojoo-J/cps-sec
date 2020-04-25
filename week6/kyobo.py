@@ -24,7 +24,7 @@ try:
     print(pages)
 
     title = []
-    for i in range(3):
+    for i in range(3): # 3페이지까지
         time.sleep(1)
 
         html = driver.page_source
@@ -32,7 +32,7 @@ try:
         conts = bs.find("div", class_="list_search_result").find_all("td", class_ = "detail") #앞에 search_list -> 중고 장터는 제외하기 위해서
 
         title.append("\npage"+str(i+1))
-        for c in conts:
+        for c in conts: # title 따기 반복
             title.append(c.find("div", class_ = "title").find("strong").text) #td(detail)->div(title)->strong의 text만 추출해서 출력
 
         driver.find_element_by_xpath('//*[@id="contents_section"]/div[9]/div[1]/a[3]').click() #다음버튼 눌러서 페이지 넘기기
